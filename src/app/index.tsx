@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, Keyboard } from 'react-native';
 
 export default function App() {
   const [ICE, setICE] = useState<string>('');
   const [Part1, setPart1] = useState<string>('');
   const [Part2, setPart2]=useState<string>('');
   const [TargetFM, setTargetFM] =useState<string>('');
-  const [FinalMark, setFinalMark] = useState<string>('');
+  const [CASS , setCASS] = useState('');
+  const [POENeeded, setPOENeeded] = useState('');
 
   return (
     <View style={styles.container}>
@@ -46,11 +47,22 @@ export default function App() {
         title="calculate"
         color="#00ff59"
         onPress={() => {
-          const calculate = Number(ICE) + Number(Part1) * 0.25 + Number(Part2) * 0.30 + Number(TargetFM) * 0.35;
-          setFinalMark(calculate.toFixed(1));
-        }}
+          const cass = Number(ICE) + Number(Part1) * 0.25 + Number(Part2) * 0.30;
+          setCASS(cass.toFixed(1));
 
-      />
+          const poe = (Number(TargetFM) - cass) / 0.35;
+          setPOENeeded(poe.toFixed(1));
+
+          Keyboard.dismiss();
+
+        }}
+        />
+      
+
+        {CASS !=='' && <Text style={styles.finalResult}>CASS = {CASS}</Text>}
+        {POENeeded !== '' && <Text style={styles.finalResult}>POE Needed = {POENeeded} / 100</Text>}
+
+      
       <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}></View>
 
       <View style={{ flex: 1, marginRight: 10}}></View>
@@ -63,7 +75,9 @@ export default function App() {
         setPart1("");
         setPart2("");
         setTargetFM('');
-        setFinalMark("");
+        setCASS('');
+        setPOENeeded('');
+        Keyboard.dismiss();
 
       }}
 
@@ -73,7 +87,6 @@ export default function App() {
       <Text>Part 1 = {Part1}</Text>
       <Text>Part 2 = {Part2}</Text>
       <Text>Target Final Mark = {TargetFM}</Text>
-      <Text>Final Mark = {FinalMark}</Text>
     </View>
   );
 }
@@ -97,6 +110,12 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 40,
+  },
+  finalResult: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 20,
+    textAlign: 'center'
   }
-
-})
+    },
+  )
